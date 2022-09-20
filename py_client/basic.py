@@ -4,7 +4,8 @@ import requests
 # endpoint = "https://httpbin.org/anything"
 endpoint = "http://localhost:8000/api/"
 
-get_response = requests.get(endpoint, params={"abc" : 123}, json={"query" : "Hellow world"})  # HTTP Request
+get_response = requests.post(
+    endpoint, json={"title" : "ABC 123","content": "Hello World", "price" : "abc123"})  # HTTP Request
 # print(get_response.text)
 # print(get_response.status_code)
 
@@ -14,4 +15,3 @@ get_response = requests.get(endpoint, params={"abc" : 123}, json={"query" : "Hel
 
 print(get_response.json())
 # print(get_response.status_code)
-
