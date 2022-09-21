@@ -4,7 +4,7 @@ from .models import Product
 from .serializers import ProductSerializer
 
 
-class  ProductListCreateAPIView(generics.ListCreateAPIView):
+class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
@@ -18,6 +18,7 @@ class  ProductListCreateAPIView(generics.ListCreateAPIView):
         title = serializer.validated_data.get('title')
         serializer.save(content=content)
 
+
 product_list_create_view = ProductListCreateAPIView.as_view()
 
 
@@ -25,6 +26,7 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     # lookup_field = 'pk'
+
 
 product_detail_view = ProductDetailAPIView.as_view()
 
@@ -35,9 +37,11 @@ class ProductUpdateAPIView(generics.UpdateAPIView):
     lookup_field = 'pk'
 
     def perform_update(self, serializer):
-        instance = serializer.save() # this is instance is identical to instance that comes through create
+        # this is instance is identical to instance that comes through create
+        instance = serializer.save()
         if not instance.content:
             instance.content = instance.title
+
 
 product_upate_view = ProductUpdateAPIView.as_view()
 
@@ -51,6 +55,7 @@ class ProductDestroyView(generics.DestroyAPIView):
         # instance
 
         super().perform_destroy(instance)
+
 
 product_destroy_view = ProductDestroyView.as_view()
 
