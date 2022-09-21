@@ -1,4 +1,5 @@
-from rest_framework import generics
+from ast import arg
+from rest_framework import generics, mixins
 
 from .models import Product
 from .serializers import ProductSerializer
@@ -67,3 +68,34 @@ product_destroy_view = ProductDestroyView.as_view()
 #     serializer_class = ProductSerializer
 
 # product_list_view = ProductListAPIView.as_view()
+
+
+class ProductMixinView(
+        mixins.CreateModelMixin,
+        mixins.ListModelMixin,
+        mixins.RetrieveModelMixin,
+        generics.GenericAPIView):
+
+    queryset = Product.objects.all()  # HTTP -> Get
+    serializer_class = ProductSerializer
+    lookup_field = 'pk'
+
+    def get(self, request, *args, **kwargs):
+        pk = kwargs.get("pk")
+        if pk is not None:
+            return self.retrieve(request, *args, **kwargs)
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        title = serializer.validated_data.get('title')
+        content = serializer.validated_data.get('content') or None
+        if content is None:
+            content = "This is a single view doing cool stuff"
+        title = serializer.validated_data.get('title')
+        serializer.save(content=content)
+
+
+product_mixin_view = ProductMixinView.as_view()
